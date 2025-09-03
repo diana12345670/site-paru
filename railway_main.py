@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -35,15 +34,15 @@ with app.app_context():
 # === ROTAS DA LOJA ===
 @app.route('/')
 def index():
-    products = Product.query.filter_by(active=True).limit(8).all()
-    categories = Category.query.filter_by(active=True).all()
+    products = Product.query.filter_by(is_active=True).limit(8).all()
+    categories = Category.query.all()
     return render_template('store/index.html', products=products, categories=categories)
 
 @app.route('/categoria/<int:category_id>')
 def category_products(category_id):
     category = Category.query.get_or_404(category_id)
-    products = Product.query.filter_by(category_id=category_id, active=True).all()
-    categories = Category.query.filter_by(active=True).all()
+    products = Product.query.filter_by(category_id=category_id, is_active=True).all()
+    categories = Category.query.all()
     return render_template('store/category.html', 
                          products=products, 
                          current_category=category,
@@ -52,12 +51,12 @@ def category_products(category_id):
 @app.route('/produto/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
-    categories = Category.query.filter_by(active=True).all()
+    categories = Category.query.all()
     return render_template('store/product.html', product=product, categories=categories)
 
 @app.route('/carrinho')
 def cart():
-    categories = Category.query.filter_by(active=True).all()
+    categories = Category.query.all()
     return render_template('store/cart.html', categories=categories)
 
 # === ROTAS DO ADMIN ===
@@ -65,7 +64,7 @@ def cart():
 def admin_dashboard():
     products_count = Product.query.count()
     categories_count = Category.query.count()
-    active_products = Product.query.filter_by(active=True).count()
+    active_products = Product.query.filter_by(is_active=True).count()
     return render_template('admin/dashboard.html', 
                          products_count=products_count,
                          categories_count=categories_count,
@@ -90,23 +89,23 @@ def admin_add_product():
         price = float(request.form['price'])
         category_id = int(request.form['category_id'])
         stock_quantity = int(request.form['stock_quantity'])
-        
+
         product = Product(
             name=name,
             description=description,
             price=price,
             category_id=category_id,
             stock_quantity=stock_quantity,
-            active=True
+            is_active=True
         )
-        
+
         db.session.add(product)
         db.session.commit()
-        
+
         flash('Produto adicionado com sucesso!', 'success')
         return redirect(url_for('admin_products'))
-    
-    categories = Category.query.filter_by(active=True).all()
+
+    categories = Category.query.all()
     return render_template('admin/add_product.html', categories=categories)
 
 # === UTILITÁRIOS ===
