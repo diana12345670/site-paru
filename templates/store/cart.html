@@ -1,0 +1,470 @@
+{% extends "store/base.html" %}
+
+{% block title %}Carrinho de Compras - Loja Kariri Xocó{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-indigenous-brown mb-4">
+                <i class="fas fa-shopping-cart me-2"></i>
+                Carrinho de Compras
+            </h1>
+        </div>
+    </div>
+
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-lg-8">
+            <form method="POST" action="{{ url_for('update_cart') }}">
+                {% for item in cart_items %}
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            {% if item.product.main_image %}
+                            <img src="{{ item.product.main_image.url }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ item.product.name }}">
+                            {% else %}
+                            <div class="h-100 d-flex align-items-center justify-content-center bg-light rounded-start">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="card-title text-indigenous-brown">{{ item.product.name }}</h5>
+                                        <p class="card-text">
+                                            <small class="text-muted">{{ item.product.category.name }}</small>
+                                        </p>
+                                        <p class="text-indigenous-red fw-bold">{{ item.product.formatted_price }}</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="quantity_{{ item.product.id }}" class="form-label">Quantidade:</label>
+                                        <input type="number" class="form-control" 
+                                               id="quantity_{{ item.product.id }}" 
+                                               name="quantity_{{ item.product.id }}" 
+                                               value="{{ item.quantity }}" 
+                                               min="1" 
+                                               max="{{ item.product.stock_quantity }}">
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        <p class="fw-bold text-indigenous-brown">
+                                            Subtotal: R$ {{ "%.2f"|format(item.total)|replace('.', ',') }}
+                                        </p>
+                                        <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" 
+                                           class="btn btn-outline-danger btn-sm"
+                                           onclick="return confirm('Remover este item do carrinho?')">
+                                            <i class="fas fa-trash"></i> Remover
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <div class="d-flex justify-content-between mb-4">
+                    <button type="submit" class="btn btn-indigenous-blue">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Atualizar Carrinho
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Continuar Comprando
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Cart Summary -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-indigenous-brown text-white">
+                    <h5 class="mb-0">Resumo do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Subtotal:</span>
+                        <span class="fw-bold">R$ {{ "%.2f"|format(total)|replace('.', ',') }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Frete:</span>
+                        <span class="text-muted">A calcular</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5">Total:</span>
+                        <span class="h5 text-indigenous-red fw-bold">R$ {{ "%.2f"|format(total)|replace('.', ',') }}</span>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>
+                            Para finalizar seu pedido, entre em contato conosco pelo WhatsApp 
+                            <strong>(71) 9947-5439</strong> ou Instagram 
+                            <a href="https://www.instagram.com/aldeiakariri_xocomultietnica/" target="_blank">@aldeiakariri_xocomultietnica</a>
+                        </small>
+                    </div>
+                    
+                    <a href="https://wa.me/5571994754379" 
+                       target="_blank" 
+                       class="btn btn-indigenous-green w-100 mb-2">
+                        <i class="fab fa-whatsapp me-2"></i>
+                        Finalizar no WhatsApp
+                    </a>
+                    
+                    <a href="https://www.instagram.com/aldeiakariri_xocomultietnica/" 
+                       target="_blank" 
+                       class="btn btn-indigenous-orange w-100 mb-2">
+                        <i class="fab fa-instagram me-2"></i>
+                        Finalizar no Instagram
+                    </a>
+                    
+                    <button type="button" class="btn btn-outline-indigenous-blue w-100" onclick="copyCartToClipboard()">
+                        <i class="fas fa-copy me-2"></i>
+                        Copiar Resumo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
+            <h3 class="text-muted">Seu carrinho está vazio</h3>
+            <p class="text-muted">Adicione alguns produtos do nosso catálogo!</p>
+            <a href="{{ url_for('index') }}" class="btn btn-indigenous-orange btn-lg">
+                <i class="fas fa-shopping-bag me-2"></i>
+                Começar a Comprar
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyCartToClipboard() {
+    let cartText = "🛍️ *Meu Pedido - Loja Kariri Xocó*\n\n";
+    
+    {% if cart_items %}
+    {% for item in cart_items %}
+    cartText += "• {{ item.product.name }}\n";
+    cartText += "  Quantidade: {{ item.quantity }}\n";
+    cartText += "  Preço: {{ item.product.formatted_price }}\n";
+    cartText += "  Subtotal: R$ {{ "%.2f"|format(item.total)|replace('.', ',') }}\n\n";
+    {% endfor %}
+    
+    cartText += "💰 *Total: R$ {{ "%.2f"|format(total)|replace('.', ',') }}*\n\n";
+    cartText += "📱 Instagram: @aldeiakariri_xocomultietnica";
+    {% endif %}
+    
+    navigator.clipboard.writeText(cartText).then(function() {
+        alert('Resumo do carrinho copiado! Cole no Instagram para finalizar o pedido.');
+    }).catch(function() {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = cartText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Resumo do carrinho copiado! Cole no Instagram para finalizar o pedido.');
+    });
+}
+</script>
+{% endblock %}
+{% extends "store/base.html" %}
+
+{% block title %}Carrinho - Loja Kariri Xocó{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-indigenous-brown mb-4">
+                <i class="fas fa-shopping-cart me-2"></i>
+                Meu Carrinho
+            </h1>
+        </div>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="row" id="cart-content">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Produtos no Carrinho</h5>
+                </div>
+                <div class="card-body" id="cart-items">
+                    <!-- Cart items will be loaded here by JavaScript -->
+                    <div class="text-center py-5" id="empty-cart">
+                        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">Seu carrinho está vazio</h4>
+                        <p class="text-muted">Adicione alguns produtos da nossa loja!</p>
+                        <a href="{{ url_for('index') }}" class="btn btn-indigenous-orange">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Continuar Comprando
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Cart Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Resumo do Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Frete:</span>
+                        <span class="text-muted">A combinar</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total:</strong>
+                        <strong id="cart-total" class="text-indigenous-orange">R$ 0,00</strong>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button onclick="sendCartToWhatsApp()" class="btn btn-success btn-lg" id="checkout-btn" disabled>
+                            <i class="fab fa-whatsapp me-2"></i>
+                            Finalizar via WhatsApp
+                        </button>
+                        <button onclick="copyCartSummary()" class="btn btn-outline-indigenous-blue" id="copy-btn" disabled>
+                            <i class="fas fa-copy me-2"></i>
+                            Copiar Resumo
+                        </button>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            O pedido será enviado pelo WhatsApp para finalização.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0 text-indigenous-orange">
+                        <i class="fas fa-phone me-2"></i>
+                        Atendimento
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <p class="mb-2">
+                            <i class="fab fa-whatsapp text-success me-1"></i>
+                            <strong>(71) 9947-5439</strong>
+                        </p>
+                        <p class="mb-2">
+                            <i class="fab fa-instagram text-primary me-1"></i>
+                            @aldeiakariri_xocomultietnica
+                        </p>
+                        <small class="text-muted">
+                            Horário de atendimento:<br>
+                            Segunda a Sexta: 8h às 17h
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem('kariri_cart')) || [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+    updateCartDisplay();
+});
+
+function loadCart() {
+    const cartItemsContainer = document.getElementById('cart-items');
+    const emptyCart = document.getElementById('empty-cart');
+    
+    if (cart.length === 0) {
+        emptyCart.style.display = 'block';
+        return;
+    }
+    
+    emptyCart.style.display = 'none';
+    
+    let cartHTML = '';
+    cart.forEach((item, index) => {
+        cartHTML += `
+            <div class="cart-item border-bottom py-3" data-index="${index}">
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                        <img src="${item.image || '/static/images/placeholder.jpg'}" 
+                             class="img-fluid rounded" alt="${item.name}">
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="product-name">${item.name}</h6>
+                        <p class="text-muted small mb-0">Artesanato Kariri Xocó</p>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="product-price">R$ ${item.price.toFixed(2)}</span>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-outline-secondary" onclick="updateQuantity(${index}, -1)">-</button>
+                            <input type="number" class="form-control text-center quantity-input" 
+                                   value="${item.quantity}" min="1" max="10" 
+                                   onchange="updateQuantity(${index}, 0, this.value)">
+                            <button class="btn btn-outline-secondary" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <div>
+                            <strong class="item-subtotal">R$ ${(item.price * item.quantity).toFixed(2)}</strong>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger mt-1" onclick="removeFromCart(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    cartItemsContainer.innerHTML = cartHTML;
+}
+
+function updateQuantity(index, change, newValue = null) {
+    if (newValue !== null) {
+        cart[index].quantity = parseInt(newValue) || 1;
+    } else {
+        cart[index].quantity += change;
+    }
+    
+    if (cart[index].quantity < 1) cart[index].quantity = 1;
+    if (cart[index].quantity > 10) cart[index].quantity = 10;
+    
+    saveCart();
+    loadCart();
+    updateCartDisplay();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    loadCart();
+    updateCartDisplay();
+    
+    if (cart.length === 0) {
+        location.reload();
+    }
+}
+
+function updateCartDisplay() {
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    document.getElementById('cart-subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+    document.getElementById('cart-total').textContent = `R$ ${subtotal.toFixed(2)}`;
+    
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    
+    if (cart.length > 0) {
+        checkoutBtn.disabled = false;
+        copyBtn.disabled = false;
+    } else {
+        checkoutBtn.disabled = true;
+        copyBtn.disabled = true;
+    }
+}
+
+function saveCart() {
+    localStorage.setItem('kariri_cart', JSON.stringify(cart));
+}
+
+function sendCartToWhatsApp() {
+    if (cart.length === 0) return;
+    
+    let message = "🛍️ *Pedido - Loja Kariri Xocó*\n\n";
+    
+    cart.forEach(item => {
+        message += `• ${item.name}\n`;
+        message += `  Quantidade: ${item.quantity}\n`;
+        message += `  Preço: R$ ${item.price.toFixed(2)}\n`;
+        message += `  Subtotal: R$ ${(item.price * item.quantity).toFixed(2)}\n\n`;
+    });
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    message += `💰 *Total: R$ ${total.toFixed(2)}*\n\n`;
+    message += "📱 Gostaria de finalizar este pedido!\n";
+    message += "🏪 Instituto Indígena Pawi Crody - Kariri Xocó";
+    
+    const whatsappUrl = `https://wa.me/5571994754379?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+function copyCartSummary() {
+    if (cart.length === 0) return;
+    
+    let summary = "🛍️ Pedido - Loja Kariri Xocó\n\n";
+    
+    cart.forEach(item => {
+        summary += `• ${item.name}\n`;
+        summary += `  Qtd: ${item.quantity} | R$ ${item.price.toFixed(2)} | Subtotal: R$ ${(item.price * item.quantity).toFixed(2)}\n\n`;
+    });
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    summary += `💰 Total: R$ ${total.toFixed(2)}\n\n`;
+    summary += "📱 WhatsApp: (71) 9947-5439\n";
+    summary += "📷 Instagram: @aldeiakariri_xocomultietnica";
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(summary).then(() => {
+            showAlert('Resumo copiado! Cole no Instagram ou WhatsApp.', 'success');
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = summary;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showAlert('Resumo copiado! Cole no Instagram ou WhatsApp.', 'success');
+    }
+}
+
+function showAlert(message, type = 'info') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}
