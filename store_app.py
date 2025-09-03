@@ -145,11 +145,5 @@ def inject_cart_count():
     cart_count = sum(session['cart'].values())
     return {'cart_count': cart_count}
 
-@store_app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    """Serve uploaded files"""
-    from flask import send_from_directory
-    return send_from_directory('uploads', filename)
-
 if __name__ == '__main__':
     store_app.run(host='0.0.0.0', port=8080, debug=True)
