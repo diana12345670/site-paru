@@ -1,131 +1,5 @@
 {% extends "store/base.html" %}
 
-{% block title %}Loja Kariri Xocó - Artesanato Indígena Autêntico{% endblock %}
-
-{% block content %}
-<!-- Hero Section -->
-<section class="hero-section bg-gradient-indigenous text-white py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-4">
-                    Artesanato Autêntico<br>
-                    <span class="text-indigenous-orange">Kariri Xocó</span>
-                </h1>
-                <p class="lead mb-4">
-                    Descubra a riqueza cultural do povo Kariri Xocó através de peças únicas,
-                    criadas com técnicas ancestrais e muito amor pela nossa tradição.
-                </p>
-                <a href="#produtos-destaque" class="btn btn-indigenous-orange btn-lg">
-                    Ver Produtos <i class="fas fa-arrow-down ms-2"></i>
-                </a>
-            </div>
-            <div class="col-lg-4 text-end">
-                <div class="hero-logo-small">
-                    <img src="{{ url_for('static', filename='images/logo-kariri-colorido.png') }}" alt="Logo Instituto Indígena Pawi Crody Kariri Xocó" class="img-fluid" style="max-height: 120px; opacity: 0.8;">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Featured Products -->
-<section id="produtos-destaque" class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="text-center text-indigenous-brown mb-5">
-                    <i class="fas fa-star text-indigenous-orange me-2"></i>
-                    Produtos em Destaque
-                </h2>
-            </div>
-        </div>
-        
-        {% if products %}
-        <div class="row">
-            {% for product in products %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100 shadow-sm">
-                    {% if product.main_image %}
-                    <img src="{{ product.main_image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
-                    {% else %}
-                    <div class="card-img-top product-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                        <i class="fas fa-image fa-3x text-muted"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-indigenous-brown">{{ product.name }}</h5>
-                        <p class="card-text text-muted small flex-grow-1">
-                            {{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}
-                        </p>
-                        <div class="mt-auto">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="h5 text-indigenous-red mb-0">{{ product.formatted_price }}</span>
-                                <small class="text-muted">
-                                    {% if product.stock_quantity > 0 %}
-                                    Em estoque
-                                    {% else %}
-                                    Esgotado
-                                    {% endif %}
-                                </small>
-                            </div>
-                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-indigenous-blue w-100">
-                                Ver Detalhes
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="row">
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
-                <h3 class="text-muted">Produtos em breve</h3>
-                <p class="text-muted">Estamos preparando nossos produtos artesanais para você!</p>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</section>
-
-<!-- About Section -->
-<section class="bg-light py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="text-indigenous-brown mb-4">
-                    Sobre Nossa Cultura
-                </h2>
-                <p class="lead">
-                    O povo Kariri Xocó preserva tradições milenares na criação de artesanatos únicos.
-                    Cada peça conta uma história e carrega a essência de nossa ancestralidade.
-                </p>
-                <p>
-                    Nossos artesãos utilizam técnicas passadas de geração em geração, 
-                    trabalhando com materiais naturais e respeitando os ciclos da natureza.
-                </p>
-                <a href="https://www.instagram.com/aldeiakariri_xocomultietnica/" target="_blank" class="btn btn-indigenous-red">
-                    <i class="fab fa-instagram me-2"></i>
-                    Siga nossa jornada
-                </a>
-            </div>
-            <div class="col-lg-6 text-center">
-                <div class="culture-icons">
-                    <i class="fas fa-leaf fa-4x text-indigenous-green mb-3"></i>
-                    <i class="fas fa-hands fa-4x text-indigenous-orange mb-3 mx-4"></i>
-                    <i class="fas fa-heart fa-4x text-indigenous-red mb-3"></i>
-                </div>
-                <p class="text-muted">Natureza • Tradição • Amor</p>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
-{% extends "store/base.html" %}
-
 {% block title %}Instituto Indígena Pawi Crody - Loja Kariri Xocó{% endblock %}
 
 {% block content %}
@@ -163,7 +37,6 @@
                          class="img-fluid" 
                          style="max-height: 300px;">
                 </div>
-                <!-- Cultural Icons -->
                 <div class="culture-icons mt-4">
                     <i class="fas fa-feather-alt fa-2x text-indigenous-orange mx-2"></i>
                     <i class="fas fa-drum fa-2x text-white mx-2"></i>
@@ -202,7 +75,7 @@
                         <i class="fas fa-image fa-3x text-muted"></i>
                     </div>
                     {% endif %}
-                    
+
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-indigenous-brown">{{ product.name }}</h5>
                         <p class="card-text text-muted flex-grow-1">
@@ -248,15 +121,6 @@
             </div>
             {% endfor %}
         </div>
-        
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <a href="{{ url_for('all_products') }}" class="btn btn-lg btn-outline-indigenous-blue">
-                    <i class="fas fa-th-large me-2"></i>
-                    Ver Todos os Produtos
-                </a>
-            </div>
-        </div>
         {% else %}
         <div class="row">
             <div class="col-12 text-center py-5">
@@ -288,7 +152,7 @@
                 <p class="lead text-muted">Explore nossos diferentes tipos de artesanato</p>
             </div>
         </div>
-        
+
         <div class="row">
             {% for category in categories %}
             <div class="col-lg-4 col-md-6 mb-4">
@@ -314,90 +178,4 @@
     </div>
 </section>
 {% endif %}
-
-<!-- About Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="display-5 text-indigenous-brown mb-4">
-                    Nossa História
-                </h2>
-                <p class="lead">
-                    O Instituto Indígena Pawi Crody preserva e compartilha a rica cultura 
-                    do povo Kariri Xocó através do artesanato tradicional.
-                </p>
-                <p>
-                    Cada peça é cuidadosamente produzida seguindo técnicas ancestrais, 
-                    transmitidas de geração em geração. Ao adquirir nossos produtos, 
-                    você contribui para a valorização da cultura indígena e 
-                    o sustento da comunidade.
-                </p>
-                <div class="row mt-4">
-                    <div class="col-6">
-                        <div class="text-center">
-                            <div class="text-indigenous-orange h2">
-                                <i class="fas fa-hands-helping"></i>
-                            </div>
-                            <h6>Feito à Mão</h6>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-center">
-                            <div class="text-indigenous-orange h2">
-                                <i class="fas fa-leaf"></i>
-                            </div>
-                            <h6>Materiais Naturais</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <img src="{{ url_for('static', filename='images/logo-kariri-xoco.png') }}" 
-                         alt="Aldeia Kariri Xocó" 
-                         class="img-fluid rounded shadow-lg" 
-                         style="max-height: 400px;">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contact Section -->
-<section class="py-5 bg-indigenous-cream">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-4">
-                <h2 class="display-5 text-indigenous-brown">
-                    <i class="fas fa-phone me-3 text-indigenous-orange"></i>
-                    Entre em Contato
-                    <i class="fas fa-phone ms-3 text-indigenous-orange"></i>
-                </h2>
-                <p class="lead text-muted">Fale conosco para encomendas especiais ou dúvidas</p>
-            </div>
-        </div>
-        
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="row text-center">
-                    <div class="col-6 mb-3">
-                        <a href="https://wa.me/5571994754379" target="_blank" 
-                           class="btn btn-success btn-lg w-100">
-                            <i class="fab fa-whatsapp fa-2x d-block mb-2"></i>
-                            WhatsApp
-                        </a>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <a href="https://www.instagram.com/aldeiakariri_xocomultietnica/" 
-                           target="_blank" class="btn btn-primary btn-lg w-100">
-                            <i class="fab fa-instagram fa-2x d-block mb-2"></i>
-                            Instagram
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 {% endblock %}

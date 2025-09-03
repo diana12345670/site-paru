@@ -3,179 +3,6 @@
 {% block title %}{{ product.name }} - Loja Kariri Xocó{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Início</a></li>
-            <li class="breadcrumb-item"><a href="{{ url_for('category_products', category_id=product.category.id) }}">{{ product.category.name }}</a></li>
-            <li class="breadcrumb-item active">{{ product.name }}</li>
-        </ol>
-    </nav>
-
-    <div class="row">
-        <!-- Product Images -->
-        <div class="col-lg-6">
-            {% if product.images %}
-            <div id="productCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for image in product.images %}
-                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="{{ image.url }}" class="d-block w-100 product-detail-image" alt="{{ image.alt_text or product.name }}">
-                    </div>
-                    {% endfor %}
-                </div>
-                {% if product.images|length > 1 %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-                {% endif %}
-            </div>
-            
-            <!-- Thumbnail Images -->
-            {% if product.images|length > 1 %}
-            <div class="row">
-                {% for image in product.images %}
-                <div class="col-3">
-                    <img src="{{ image.url }}" class="img-thumbnail product-thumbnail" 
-                         alt="{{ image.alt_text or product.name }}"
-                         data-bs-target="#productCarousel" 
-                         data-bs-slide-to="{{ loop.index0 }}">
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% else %}
-            <div class="product-detail-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                <i class="fas fa-image fa-5x text-muted"></i>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- Product Details -->
-        <div class="col-lg-6">
-            <h1 class="text-indigenous-brown mb-3">{{ product.name }}</h1>
-            
-            <div class="mb-3">
-                <span class="badge bg-indigenous-blue">{{ product.category.name }}</span>
-            </div>
-            
-            <h2 class="text-indigenous-red mb-4">{{ product.formatted_price }}</h2>
-            
-            <div class="mb-4">
-                <h5 class="text-indigenous-brown">Descrição</h5>
-                <p class="lead">{{ product.description or "Produto artesanal único do povo Kariri Xocó." }}</p>
-            </div>
-            
-            <!-- Stock Info -->
-            <div class="mb-4">
-                {% if product.stock_quantity > 0 %}
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>Em estoque</strong> - {{ product.stock_quantity }} unidades disponíveis
-                </div>
-                {% else %}
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <strong>Produto esgotado</strong>
-                </div>
-                {% endif %}
-            </div>
-            
-            <!-- Add to Cart Form -->
-            {% if product.stock_quantity > 0 %}
-            <form method="POST" action="{{ url_for('add_to_cart') }}" class="mb-4">
-                <input type="hidden" name="product_id" value="{{ product.id }}">
-                
-                <div class="row mb-3">
-                    <div class="col-4">
-                        <label for="quantity" class="form-label">Quantidade:</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" 
-                               value="1" min="1" max="{{ product.stock_quantity }}" required>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn btn-indigenous-orange btn-lg w-100">
-                    <i class="fas fa-cart-plus me-2"></i>
-                    Adicionar ao Carrinho
-                </button>
-            </form>
-            {% endif %}
-            
-            <!-- Product Features -->
-            <div class="card border-0 bg-light">
-                <div class="card-body">
-                    <h6 class="card-title text-indigenous-brown">
-                        <i class="fas fa-leaf me-2"></i>
-                        Características do Produto
-                    </h6>
-                    <ul class="list-unstyled mb-0">
-                        <li><i class="fas fa-check text-success me-2"></i>Feito à mão por artesãos Kariri Xocó</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Materiais naturais e sustentáveis</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Técnicas tradicionais ancestrais</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Peça única e autêntica</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Related Products -->
-    {% if related_products %}
-    <section class="mt-5">
-        <h3 class="text-indigenous-brown mb-4">Produtos Relacionados</h3>
-        <div class="row">
-            {% for related_product in related_products %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100 shadow-sm">
-                    {% if related_product.main_image %}
-                    <img src="{{ related_product.main_image.url }}" class="card-img-top product-image" alt="{{ related_product.name }}">
-                    {% else %}
-                    <div class="card-img-top product-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                        <i class="fas fa-image fa-2x text-muted"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title text-indigenous-brown">{{ related_product.name }}</h6>
-                        <div class="mt-auto">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold text-indigenous-red">{{ related_product.formatted_price }}</span>
-                            </div>
-                            <a href="{{ url_for('product_detail', product_id=related_product.id) }}" class="btn btn-indigenous-blue btn-sm w-100">
-                                Ver Detalhes
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-    {% endif %}
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    // Make thumbnail images clickable
-    document.querySelectorAll('.product-thumbnail').forEach(function(thumbnail) {
-        thumbnail.addEventListener('click', function() {
-            const carousel = bootstrap.Carousel.getInstance(document.getElementById('productCarousel'));
-            const slideIndex = parseInt(this.getAttribute('data-bs-slide-to'));
-            carousel.to(slideIndex);
-        });
-    });
-</script>
-{% endblock %}
-{% extends "store/base.html" %}
-
-{% block title %}{{ product.name }} - Loja Kariri Xocó{% endblock %}
-
-{% block content %}
 <div class="container py-5">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
@@ -211,7 +38,6 @@
                     </div>
                     {% endfor %}
                 </div>
-                
                 {% if product.images|length > 1 %}
                 <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -223,185 +49,73 @@
                 </button>
                 {% endif %}
             </div>
-            
-            <!-- Thumbnails -->
-            {% if product.images|length > 1 %}
-            <div class="row mt-3">
-                {% for image in product.images %}
-                <div class="col-3">
-                    <img src="{{ url_for('uploaded_file', filename=image.filename) }}" 
-                         class="img-thumbnail product-thumbnail {{ 'active' if loop.first }}" 
-                         alt="Miniatura {{ loop.index }}"
-                         data-bs-target="#productCarousel" 
-                         data-bs-slide-to="{{ loop.index0 }}">
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
             {% else %}
             <div class="product-detail-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                <div class="text-center">
-                    <i class="fas fa-image fa-5x text-muted mb-3"></i>
-                    <p class="text-muted">Imagem não disponível</p>
-                </div>
+                <i class="fas fa-image fa-5x text-muted"></i>
             </div>
             {% endif %}
         </div>
 
         <!-- Product Details -->
         <div class="col-lg-6">
-            <div class="ps-lg-4">
-                <h1 class="text-indigenous-brown mb-3">{{ product.name }}</h1>
-                
-                {% if product.category %}
-                <div class="mb-3">
-                    <span class="badge bg-indigenous-orange fs-6">{{ product.category.name }}</span>
-                </div>
-                {% endif %}
-                
-                <div class="mb-4">
-                    <h2 class="text-indigenous-orange mb-3">R$ {{ "%.2f"|format(product.price) }}</h2>
-                    
-                    {% if product.stock_quantity > 0 %}
-                    <div class="text-success mb-2">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Em estoque</strong>
-                        {% if product.stock_quantity <= 5 %}
-                        <small class="text-muted">({{ product.stock_quantity }} disponíve{{ 'is' if product.stock_quantity != 1 else 'l' }})</small>
-                        {% endif %}
-                    </div>
-                    {% else %}
-                    <div class="text-warning mb-2">
-                        <i class="fas fa-clock me-2"></i>
-                        <strong>Sob encomenda</strong>
-                    </div>
-                    {% endif %}
-                </div>
-
-                {% if product.description %}
-                <div class="mb-4">
-                    <h5 class="text-indigenous-brown">Descrição</h5>
-                    <p class="text-muted">{{ product.description }}</p>
-                </div>
-                {% endif %}
-
-                <!-- Add to Cart Form -->
-                <div class="mb-4">
-                    <form id="addToCartForm">
-                        <div class="row align-items-end">
-                            <div class="col-4">
-                                <label for="quantity" class="form-label">Quantidade:</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" 
-                                       value="1" min="1" max="{{ product.stock_quantity if product.stock_quantity > 0 else 10 }}">
-                            </div>
-                            <div class="col-8">
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-indigenous-orange btn-lg">
-                                        <i class="fas fa-shopping-cart me-2"></i>
-                                        Adicionar ao Carrinho
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- WhatsApp Direct Order -->
-                <div class="mb-4">
-                    <button type="button" class="btn btn-success btn-lg w-100" onclick="orderViaWhatsApp()">
-                        <i class="fab fa-whatsapp me-2"></i>
-                        Encomendar via WhatsApp
-                    </button>
-                </div>
-
-                <!-- Product Details -->
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0 text-indigenous-brown">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Informações do Produto
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <small class="text-muted d-block">Categoria:</small>
-                                <span>{{ product.category.name if product.category else 'Artesanato' }}</span>
-                            </div>
-                            <div class="col-6">
-                                <small class="text-muted d-block">Disponibilidade:</small>
-                                <span class="{{ 'text-success' if product.stock_quantity > 0 else 'text-warning' }}">
-                                    {{ 'Em estoque' if product.stock_quantity > 0 else 'Sob encomenda' }}
-                                </span>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="text-center">
-                            <small class="text-muted">
-                                <i class="fas fa-heart text-indigenous-orange me-1"></i>
-                                Feito à mão pela comunidade Kariri Xocó
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Share -->
-                <div class="mt-4">
-                    <h6 class="text-indigenous-brown">Compartilhar:</h6>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-outline-success" onclick="shareWhatsApp()">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                        <button class="btn btn-outline-primary" onclick="shareInstagram()">
-                            <i class="fab fa-instagram"></i>
-                        </button>
-                        <button class="btn btn-outline-secondary" onclick="copyLink()">
-                            <i class="fas fa-link"></i>
-                        </button>
-                    </div>
-                </div>
+            <h1 class="text-indigenous-brown mb-3">{{ product.name }}</h1>
+            {% if product.category %}
+            <div class="mb-3">
+                <span class="badge bg-indigenous-orange fs-6">{{ product.category.name }}</span>
             </div>
-        </div>
-    </div>
-
-    <!-- Related Products -->
-    {% if related_products %}
-    <div class="row mt-5">
-        <div class="col-12">
-            <h3 class="text-indigenous-brown mb-4">Produtos Relacionados</h3>
-        </div>
-        {% for related_product in related_products %}
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card product-card h-100 shadow-sm">
-                {% if related_product.images %}
-                <img src="{{ url_for('uploaded_file', filename=related_product.images[0].filename) }}" 
-                     class="card-img-top product-image" 
-                     alt="{{ related_product.name }}">
+            {% endif %}
+            <div class="mb-4">
+                <h2 class="text-indigenous-orange mb-3">R$ {{ "%.2f"|format(product.price) }}</h2>
+                {% if product.stock_quantity > 0 %}
+                <div class="text-success mb-2">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Em estoque</strong>
+                </div>
                 {% else %}
-                <div class="product-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                    <i class="fas fa-image fa-3x text-muted"></i>
+                <div class="text-warning mb-2">
+                    <i class="fas fa-clock me-2"></i>
+                    <strong>Sob encomenda</strong>
                 </div>
                 {% endif %}
-                
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title text-indigenous-brown">{{ related_product.name }}</h6>
-                    <div class="mt-auto">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="text-indigenous-orange mb-0">R$ {{ "%.2f"|format(related_product.price) }}</h6>
+            </div>
+
+            {% if product.description %}
+            <div class="mb-4">
+                <h5 class="text-indigenous-brown">Descrição</h5>
+                <p class="text-muted">{{ product.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Add to Cart -->
+            <div class="mb-4">
+                <form id="addToCartForm">
+                    <div class="row align-items-end">
+                        <div class="col-4">
+                            <label for="quantity" class="form-label">Quantidade:</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" 
+                                   value="1" min="1" max="{{ product.stock_quantity if product.stock_quantity > 0 else 10 }}">
                         </div>
-                        <div class="d-grid">
-                            <a href="{{ url_for('product_detail', product_id=related_product.id) }}" 
-                               class="btn btn-sm btn-outline-indigenous-blue">
-                                Ver Produto
-                            </a>
+                        <div class="col-8">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-indigenous-orange btn-lg">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Adicionar ao Carrinho
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+            </div>
+
+            <!-- WhatsApp Order -->
+            <div class="mb-4">
+                <button type="button" class="btn btn-success btn-lg w-100" onclick="orderViaWhatsApp()">
+                    <i class="fab fa-whatsapp me-2"></i>
+                    Encomendar via WhatsApp
+                </button>
             </div>
         </div>
-        {% endfor %}
     </div>
-    {% endif %}
 </div>
 {% endblock %}
 
@@ -409,7 +123,6 @@
 <script>
 document.getElementById('addToCartForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
     const quantity = parseInt(document.getElementById('quantity').value);
     const productData = {
         id: {{ product.id }},
@@ -418,28 +131,19 @@ document.getElementById('addToCartForm').addEventListener('submit', function(e) 
         quantity: quantity,
         image: "{{ product.images[0].filename if product.images else '' }}"
     };
-    
     addToCart(productData);
 });
 
 function addToCart(productData) {
     let cart = JSON.parse(localStorage.getItem('kariri_cart')) || [];
-    
     const existingItem = cart.find(item => item.id === productData.id);
-    
     if (existingItem) {
         existingItem.quantity += productData.quantity;
     } else {
         cart.push(productData);
     }
-    
     localStorage.setItem('kariri_cart', JSON.stringify(cart));
-    
-    // Show success message
-    showAlert(`${productData.name} adicionado ao carrinho! (${productData.quantity} item${productData.quantity > 1 ? 's' : ''})`, 'success');
-    
-    // Update cart badge if exists
-    updateCartBadge();
+    alert(`${productData.name} adicionado ao carrinho!`);
 }
 
 function orderViaWhatsApp() {
@@ -448,79 +152,9 @@ function orderViaWhatsApp() {
                    `• {{ product.name }}\n` +
                    `• Quantidade: ${quantity}\n` +
                    `• Preço: R$ {{ "%.2f"|format(product.price) }}\n\n` +
-                   `💰 Total: R$ {{ "%.2f"|format(product.price) }} x ${quantity} = R$ ${({{ product.price }} * quantity).toFixed(2)}\n\n` +
                    `📱 Link do produto: ${window.location.href}`;
-    
     const whatsappUrl = `https://wa.me/5571994754379?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
-
-function shareWhatsApp() {
-    const message = `🎨 Olha que produto lindo da Loja Kariri Xocó!\n\n` +
-                   `{{ product.name }}\n` +
-                   `R$ {{ "%.2f"|format(product.price) }}\n\n` +
-                   `${window.location.href}\n\n` +
-                   `#ArtesanatoIndigena #KaririXoco`;
-    
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-}
-
-function shareInstagram() {
-    showAlert('Copie o link e compartilhe no seu Instagram!', 'info');
-    copyLink();
-}
-
-function copyLink() {
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            showAlert('Link copiado!', 'success');
-        });
-    } else {
-        // Fallback
-        const textArea = document.createElement('textarea');
-        textArea.value = window.location.href;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        showAlert('Link copiado!', 'success');
-    }
-}
-
-function updateCartBadge() {
-    const cart = JSON.parse(localStorage.getItem('kariri_cart')) || [];
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const badge = document.querySelector('.badge');
-    
-    if (badge && totalItems > 0) {
-        badge.textContent = totalItems;
-        badge.style.display = 'inline';
-    }
-}
-
-function showAlert(message, type = 'info') {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
-    alertDiv.style.top = '20px';
-    alertDiv.style.right = '20px';
-    alertDiv.style.zIndex = '9999';
-    alertDiv.style.maxWidth = '400px';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.body.appendChild(alertDiv);
-    
-    setTimeout(() => {
-        if (alertDiv.parentNode) {
-            alertDiv.remove();
-        }
-    }, 4000);
-}
-
-// Initialize cart badge
-document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}

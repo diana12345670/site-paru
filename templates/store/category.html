@@ -1,85 +1,5 @@
 {% extends "store/base.html" %}
 
-{% block title %}{{ category.name }} - Loja Kariri Xocó{% endblock %}
-
-{% block content %}
-<div class="container py-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Início</a></li>
-            <li class="breadcrumb-item active">{{ category.name }}</li>
-        </ol>
-    </nav>
-
-    <!-- Category Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="text-indigenous-brown">{{ category.name }}</h1>
-            {% if category.description %}
-            <p class="lead text-muted">{{ category.description }}</p>
-            {% endif %}
-            <hr>
-        </div>
-    </div>
-
-    <!-- Products Grid -->
-    {% if products %}
-    <div class="row">
-        {% for product in products %}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card product-card h-100 shadow-sm">
-                {% if product.main_image %}
-                <img src="{{ product.main_image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
-                {% else %}
-                <div class="card-img-top product-image-placeholder d-flex align-items-center justify-content-center bg-light">
-                    <i class="fas fa-image fa-3x text-muted"></i>
-                </div>
-                {% endif %}
-                
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title text-indigenous-brown">{{ product.name }}</h5>
-                    <p class="card-text text-muted small flex-grow-1">
-                        {{ product.description[:120] }}{% if product.description|length > 120 %}...{% endif %}
-                    </p>
-                    <div class="mt-auto">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="h5 text-indigenous-red mb-0">{{ product.formatted_price }}</span>
-                            <small class="text-muted">
-                                {% if product.stock_quantity > 0 %}
-                                <i class="fas fa-check-circle text-success me-1"></i>Em estoque
-                                {% else %}
-                                <i class="fas fa-times-circle text-warning me-1"></i>Esgotado
-                                {% endif %}
-                            </small>
-                        </div>
-                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-indigenous-blue w-100">
-                            Ver Detalhes
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <!-- Empty State -->
-    <div class="row">
-        <div class="col-12 text-center py-5">
-            <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
-            <h3 class="text-muted">Nenhum produto encontrado</h3>
-            <p class="text-muted">Esta categoria ainda não possui produtos disponíveis.</p>
-            <a href="{{ url_for('index') }}" class="btn btn-indigenous-orange">
-                <i class="fas fa-arrow-left me-2"></i>
-                Voltar ao Início
-            </a>
-        </div>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
-{% extends "store/base.html" %}
-
 {% block title %}{{ current_category.name }} - Loja Kariri Xocó{% endblock %}
 
 {% block content %}
@@ -145,7 +65,7 @@
                     <i class="fas fa-image fa-3x text-muted"></i>
                 </div>
                 {% endif %}
-                
+
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-indigenous-brown">{{ product.name }}</h5>
                     <p class="card-text text-muted flex-grow-1">
@@ -155,7 +75,7 @@
                             {{ product.description or 'Artesanato tradicional Kariri Xocó' }}
                         {% endif %}
                     </p>
-                    
+
                     <div class="mt-auto">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="text-indigenous-orange mb-0">
@@ -177,7 +97,7 @@
                             </small>
                             {% endif %}
                         </div>
-                        
+
                         <div class="d-grid gap-2">
                             <a href="{{ url_for('product_detail', product_id=product.id) }}" 
                                class="btn btn-outline-indigenous-blue">
@@ -235,9 +155,9 @@ function toggleView(viewType) {
     const container = document.getElementById('products-container');
     const items = container.querySelectorAll('.product-item');
     const buttons = document.querySelectorAll('.btn-group button');
-    
+
     buttons.forEach(btn => btn.classList.remove('active'));
-    
+
     if (viewType === 'list') {
         items.forEach(item => {
             item.className = 'col-12 mb-3 product-item';
@@ -256,12 +176,9 @@ function toggleView(viewType) {
 }
 
 function addToCartFromList(productId, productName, productPrice, productImage) {
-    // Get existing cart or create new one
     let cart = JSON.parse(localStorage.getItem('kariri_cart')) || [];
-    
-    // Check if product already exists in cart
     const existingItem = cart.find(item => item.id === productId);
-    
+
     if (existingItem) {
         existingItem.quantity += 1;
         showAlert(`${productName} - quantidade atualizada no carrinho!`, 'success');
@@ -276,11 +193,8 @@ function addToCartFromList(productId, productName, productPrice, productImage) {
         cart.push(newItem);
         showAlert(`${productName} adicionado ao carrinho!`, 'success');
     }
-    
-    // Save updated cart
+
     localStorage.setItem('kariri_cart', JSON.stringify(cart));
-    
-    // Update cart count in navbar if it exists
     updateCartBadge();
 }
 
@@ -288,7 +202,7 @@ function updateCartBadge() {
     const cart = JSON.parse(localStorage.getItem('kariri_cart')) || [];
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const badge = document.querySelector('.badge');
-    
+
     if (badge && totalItems > 0) {
         badge.textContent = totalItems;
         badge.style.display = 'inline';
@@ -306,9 +220,9 @@ function showAlert(message, type = 'info') {
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    
+
     document.body.appendChild(alertDiv);
-    
+
     setTimeout(() => {
         if (alertDiv.parentNode) {
             alertDiv.remove();
@@ -316,7 +230,6 @@ function showAlert(message, type = 'info') {
     }, 4000);
 }
 
-// Initialize cart badge on page load
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 </script>
 {% endblock %}
