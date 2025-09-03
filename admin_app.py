@@ -218,5 +218,11 @@ def delete_category(category_id):
     flash('Categoria deletada com sucesso!', 'success')
     return redirect(url_for('categories'))
 
+@admin_app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    """Serve uploaded files"""
+    from flask import send_from_directory
+    return send_from_directory(admin_app.config['UPLOAD_FOLDER'], filename)
+
 if __name__ == '__main__':
     admin_app.run(host='0.0.0.0', port=5000, debug=True)

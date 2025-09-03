@@ -1,389 +1,255 @@
+
 {% extends "admin/base.html" %}
 
 {% block title %}Dashboard - Admin Kariri Xocó{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h1 class="text-indigenous-brown mb-4">
-            <i class="fas fa-tachometer-alt me-2"></i>
-            Dashboard
-        </h1>
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="text-indigenous-brown mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Dashboard Administrativo
+                </h1>
+                <div class="text-end">
+                    <small class="text-muted">Instituto Indígena Pawi Crody</small>
+                    <br>
+                    <small class="text-muted">Kariri Xocó</small>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-blue text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Total de Produtos</h6>
-                        <h2 class="mb-0">{{ total_products }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-box fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-green text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Produtos Ativos</h6>
-                        <h2 class="mb-0">{{ active_products }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-check-circle fa-2x"></i>
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-indigenous-blue text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_products }}</h4>
+                            <p class="card-text">Total de Produtos</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-boxes fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-orange text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Categorias</h6>
-                        <h2 class="mb-0">{{ total_categories }}</h2>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-tags fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-red text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h6 class="card-title">Instagram</h6>
-                        <small>@aldeiakariri_xocomultietnica</small>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fab fa-instagram fa-2x"></i>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-indigenous-orange text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ active_products }}</h4>
+                            <p class="card-text">Produtos Ativos</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Ações Rápidas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('add_product') }}" class="btn btn-indigenous-orange w-100">
-                            <i class="fas fa-plus me-2"></i>
-                            Novo Produto
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('categories') }}" class="btn btn-indigenous-blue w-100">
-                            <i class="fas fa-tags me-2"></i>
-                            Gerenciar Categorias
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('products') }}" class="btn btn-indigenous-green w-100">
-                            <i class="fas fa-list me-2"></i>
-                            Ver Produtos
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="http://localhost:8080" target="_blank" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-external-link-alt me-2"></i>
-                            Ver Loja
-                        </a>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-indigenous-green text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ total_categories }}</h4>
+                            <p class="card-text">Categorias</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-tags fa-2x opacity-75"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Recent Products -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Produtos Recentes</h5>
-                <a href="{{ url_for('products') }}" class="btn btn-sm btn-outline-primary">Ver Todos</a>
-            </div>
-            <div class="card-body">
-                {% if recent_products %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Preço</th>
-                                <th>Estoque</th>
-                                <th>Status</th>
-                                <th>Criado</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in recent_products %}
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        {% if product.main_image %}
-                                        <img src="{{ product.main_image.url }}" class="rounded me-2" width="40" height="40" style="object-fit: cover;">
-                                        {% endif %}
-                                        {{ product.name }}
-                                    </div>
-                                </td>
-                                <td>{{ product.category.name }}</td>
-                                <td>{{ product.formatted_price }}</td>
-                                <td>{{ product.stock_quantity }}</td>
-                                <td>
-                                    {% if product.is_active %}
-                                    <span class="badge bg-success">Ativo</span>
-                                    {% else %}
-                                    <span class="badge bg-secondary">Inativo</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ product.created_at.strftime('%d/%m/%Y') }}</td>
-                                <td>
-                                    <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-4">
-                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Nenhum produto cadastrado</h5>
-                    <p class="text-muted">Comece adicionando seu primeiro produto!</p>
-                    <a href="{{ url_for('add_product') }}" class="btn btn-indigenous-orange">
-                        <i class="fas fa-plus me-2"></i>
-                        Adicionar Produto
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-{% extends "admin/base.html" %}
-
-{% block title %}Dashboard - Admin Kariri Xocó{% endblock %}
-
-{% block content %}
-<div class="row">
-    <div class="col-12">
-        <h1 class="text-indigenous-brown mb-4">
-            <i class="fas fa-tachometer-alt me-2"></i>
-            Dashboard
-        </h1>
-    </div>
-</div>
-
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-blue text-white h-100">
-            <div class="card-body text-center">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 class="mb-0">{{ products_count }}</h2>
-                        <p class="mb-0">Produtos</p>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-box fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-green text-white h-100">
-            <div class="card-body text-center">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 class="mb-0">{{ active_products }}</h2>
-                        <p class="mb-0">Produtos Ativos</p>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-check-circle fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-orange text-white h-100">
-            <div class="card-body text-center">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 class="mb-0">{{ categories_count }}</h2>
-                        <p class="mb-0">Categorias</p>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-tags fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-lg-3 col-md-6 mb-3">
-        <div class="card bg-indigenous-red text-white h-100">
-            <div class="card-body text-center">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 class="mb-0">{{ (products_count - active_products) }}</h2>
-                        <p class="mb-0">Produtos Inativos</p>
-                    </div>
-                    <div class="align-self-center">
-                        <i class="fas fa-eye-slash fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Ações Rápidas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('admin_add_product') }}" class="btn btn-indigenous-orange w-100">
-                            <i class="fas fa-plus me-2"></i>
-                            Novo Produto
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('admin_products') }}" class="btn btn-outline-indigenous-blue w-100">
-                            <i class="fas fa-list me-2"></i>
-                            Ver Produtos
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ url_for('admin_categories') }}" class="btn btn-outline-indigenous-blue w-100">
-                            <i class="fas fa-tags me-2"></i>
-                            Categorias
-                        </a>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="/" target="_blank" class="btn btn-outline-secondary w-100">
-                            <i class="fas fa-external-link-alt me-2"></i>
-                            Ver Loja
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Activity and Info -->
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Sobre a Loja Kariri Xocó</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="text-indigenous-orange">🏛️ Instituto Indígena Pawi Crody</h6>
-                        <p class="small">Preservando e compartilhando a rica cultura do povo Kariri Xocó através do artesanato tradicional.</p>
-                        
-                        <h6 class="text-indigenous-orange">🎨 Produtos Oferecidos</h6>
-                        <ul class="list-unstyled small">
-                            <li>• Artesanatos tradicionais</li>
-                            <li>• Acessórios culturais</li>
-                            <li>• Instrumentos musicais</li>
-                            <li>• Utensílios cerimoniais</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-indigenous-orange">📱 Contatos</h6>
-                        <p class="small">
-                            <i class="fab fa-instagram me-1"></i>
-                            @aldeiakariri_xocomultietnica
-                        </p>
-                        <p class="small">
-                            <i class="fab fa-whatsapp me-1"></i>
-                            (71) 9947-5439
-                        </p>
-                        
-                        <h6 class="text-indigenous-orange">🛠️ Desenvolvido por</h6>
-                        <div class="d-flex align-items-center">
-                            <img src="{{ url_for('static', filename='images/fox-studio-logo.png') }}" alt="Fox Studio" height="25" class="me-2">
-                            <div>
-                                <small class="d-block">Fox Studio Auditoria</small>
-                                <small class="text-muted">guineas.studio@gmail.com</small>
-                            </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-indigenous-brown text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">Online</h4>
+                            <p class="card-text">Status da Loja</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-store fa-2x opacity-75"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Status do Sistema</h5>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Ações Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ url_for('add_product') }}" class="btn btn-indigenous-orange w-100">
+                                <i class="fas fa-plus me-2"></i>
+                                Novo Produto
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ url_for('categories') }}" class="btn btn-indigenous-blue w-100">
+                                <i class="fas fa-tags me-2"></i>
+                                Gerenciar Categorias
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{{ url_for('products') }}" class="btn btn-indigenous-green w-100">
+                                <i class="fas fa-list me-2"></i>
+                                Ver Produtos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/" target="_blank" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                Ver Loja
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="small">Loja Online</span>
-                    <span class="badge bg-success">Ativo</span>
+        </div>
+    </div>
+
+    <!-- Recent Products -->
+    {% if recent_products %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Produtos Recentes</h5>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="small">Admin Panel</span>
-                    <span class="badge bg-success">Ativo</span>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in recent_products %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if product.images %}
+                                            <img src="{{ url_for('uploaded_file', filename=product.images[0].filename) }}" 
+                                                 alt="{{ product.name }}" 
+                                                 class="me-3 rounded" 
+                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% endif %}
+                                            <div>
+                                                <strong>{{ product.name }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ product.description[:50] }}...</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ product.category.name if product.category else 'N/A' }}</td>
+                                    <td class="text-indigenous-red fw-bold">{{ product.formatted_price }}</td>
+                                    <td>
+                                        {% if product.stock_quantity > 0 %}
+                                            <span class="badge bg-success">{{ product.stock_quantity }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Esgotado</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if product.is_active %}
+                                            <span class="badge bg-success">Ativo</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('edit_product', product_id=product.id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="small">Banco de Dados</span>
-                    <span class="badge bg-success">Conectado</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- System Info -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações do Sistema</h5>
                 </div>
-                
-                <hr class="my-3">
-                
-                <h6 class="text-indigenous-orange">🔗 Links Úteis</h6>
-                <div class="d-grid gap-1">
-                    <a href="/" target="_blank" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-store me-1"></i> Ver Loja
-                    </a>
-                    <a href="/health" target="_blank" class="btn btn-sm btn-outline-info">
-                        <i class="fas fa-heartbeat me-1"></i> Health Check
-                    </a>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-indigenous-orange">Instituto Indígena Pawi Crody</h6>
+                            <p class="text-muted small">
+                                Plataforma digital para valorização e comercialização de artesanatos 
+                                da comunidade Kariri Xocó. Sistema desenvolvido com foco na 
+                                preservação cultural e geração de renda sustentável.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-indigenous-orange">Desenvolvido por</h6>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ url_for('static', filename='images/fox-studio-logo.png') }}" alt="Fox Studio" height="25" class="me-2">
+                                <div>
+                                    <small class="d-block">Fox Studio Auditoria</small>
+                                    <small class="text-muted">guineas.studio@gmail.com</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Status do Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Loja Online</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Admin Panel</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small">Banco de Dados</span>
+                        <span class="badge bg-success">Conectado</span>
+                    </div>
                 </div>
             </div>
         </div>

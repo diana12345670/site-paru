@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -20,7 +19,11 @@ init_db(app)
 # Registrar as rotas da loja na aplicação principal
 @app.route('/')
 def index():
-    return store_app.test_client().get('/').get_data(as_text=True)
+    return "Escolha uma aplicação: /admin ou /store"
+
+    @app.route('/uploads/<filename>')
+    def uploaded_file(filename):
+        return send_from_directory('uploads', filename)
 
 @app.route('/loja')
 @app.route('/loja/')
