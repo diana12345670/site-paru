@@ -1,12 +1,9 @@
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from shared.database import db, init_db
 from shared.models import Product, Category, ProductImage
-
-# Importar as aplicações
-from store_app import store_app
-from admin_app import admin_app
 
 # Criar aplicação principal que vai rodar no Replit
 app = Flask(__name__)
@@ -16,15 +13,10 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 # Inicializar database
 init_db(app)
 
-# Página inicial simples
+# Página inicial com design melhorado
 @app.route('/')
 def index():
-    return """
-    <h1>Loja Kariri Xocó - Escolha uma aplicação:</h1>
-    <p><a href="/admin">Painel Administrativo (Porta 5000)</a></p>
-    <p><a href="/loja">Loja Virtual (Porta 8080)</a></p>
-    <p><a href="/health">Status da Aplicação</a></p>
-    """
+    return render_template('home.html')
 
 # Rotas para uploads (importante para imagens)
 @app.route('/uploads/<filename>')
@@ -46,15 +38,17 @@ def ping():
     """Endpoint alternativo para ping"""
     return 'pong'
 
-# Redirecionamentos para as aplicações separadas
-@app.route('/admin')
-def redirect_admin():
-    return '<script>window.open("http://localhost:5000", "_blank");</script><p>Abrindo Admin Panel...</p>'
+# Importar as aplicações
+from store_app import store_app
+from admin_app import admin_app
 
-@app.route('/loja')
-def redirect_store():
-    return '<script>window.open("http://localhost:8080", "_blank");</script><p>Abrindo Loja Virtual...</p>'
+# Configurar aplicação composta com DispatcherMiddleware
+application = DispatcherMiddleware(app, {
+    '/loja': store_app,
+    '/admin': admin_app
+})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    from werkzeug.serving import run_simple
+    port = int(os.environ.get('PORT', 5000))
+    run_simple('0.0.0.0', port, application, use_debugger=False, use_reloader=False)

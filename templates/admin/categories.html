@@ -1,0 +1,126 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Categorias - Admin Kariri Xocó{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-indigenous-brown">
+                <i class="fas fa-tags me-2"></i>
+                Categorias
+            </h1>
+            <button class="btn btn-indigenous-orange" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="fas fa-plus me-2"></i>
+                Nova Categoria
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if categories %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Produtos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td>
+                                    <strong>{{ category.name }}</strong>
+                                </td>
+                                <td>
+                                    {% if category.description %}
+                                    {{ category.description }}
+                                    {% else %}
+                                    <span class="text-muted">Sem descrição</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        {{ category.products|length }} produto(s)
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if category.products %}
+                                    <span class="text-muted" title="Não é possível deletar categoria com produtos">
+                                        <i class="fas fa-info-circle"></i>
+                                        Com produtos
+                                    </span>
+                                    {% else %}
+                                    <a href="/admin/categoria/{{ category.id }}/deletar" 
+                                       class="btn btn-sm btn-outline-danger" 
+                                       onclick="return confirm('Tem certeza que deseja deletar esta categoria?')"
+                                       title="Deletar categoria">
+                                        <i class="fas fa-trash"></i>
+                                        Deletar
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-tags fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Nenhuma categoria cadastrada</h4>
+                    <p class="text-muted">Organize seus produtos criando categorias!</p>
+                    <button class="btn btn-indigenous-orange" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                        <i class="fas fa-plus me-2"></i>
+                        Criar Primeira Categoria
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-indigenous-orange text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Nova Categoria
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/admin/categoria/nova">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nome da Categoria <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required 
+                               placeholder="Ex: Artesanato, Acessórios, Instrumentos...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Descrição opcional da categoria..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-indigenous-orange">
+                        <i class="fas fa-save me-2"></i>
+                        Salvar Categoria
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
