@@ -2,8 +2,8 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { motion } from "framer-motion";
-import earrings1 from "@assets/stock_images/colorful_beaded_earrings_product_photo_c1dd1b52.png";
-import necklace1 from "@assets/stock_images/traditional_beaded_necklace_flatlay_3dcecc86.png";
+import earrings1 from "@assets/stock_images/colorful_beaded_earr_1b94fd79.jpg";
+import necklace1 from "@assets/stock_images/traditional_beaded_n_90efe226.jpg";
 import bracelet2 from "@assets/stock_images/handmade_bracelet_ar_13195b7e.jpg";
 
 const products = [
@@ -11,7 +11,7 @@ const products = [
     id: "1",
     name: "Brincos de Miçanga Coloridos",
     price: 75.00,
-    image: earrings1,
+    image: "https://i.ibb.co/rKvR3nSP/Captura-de-tela-2025-10-31-125134.png",
     category: "Brincos",
     description: "Lindos brincos artesanais feitos com miçangas tradicionais, cada peça é única e carrega a história de nossa cultura."
   },
