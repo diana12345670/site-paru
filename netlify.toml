@@ -3,7 +3,7 @@ app = "kariri-xoco-web"
 
 [build]
   # Base directory (root of the repository)
-  base = "."
+  base = "site-paru"
   # Build command for React app
   command = "npm run build"
   # Directory to publish (Vite builds to dist/public)
