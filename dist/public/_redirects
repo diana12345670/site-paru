@@ -1,0 +1,10 @@
+# Netlify redirects file (backup for netlify.toml)
+
+# API routes
+/api/*  /.netlify/functions/api  200
+
+# Health check
+/health  /.netlify/functions/api  200
+
+# SPA routing
+/*  /index.html  200

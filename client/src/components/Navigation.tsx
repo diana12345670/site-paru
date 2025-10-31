@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import logoColorido from "@assets/logo-kariri-colorido.png_1761066141574.png";
 
 export function Navigation() {
+  const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isHome = location === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +19,13 @@ export function Navigation() {
   }, []);
 
   const scrollToSection = (id: string) => {
+    // Se não estiver na página Home, redireciona primeiro
+    if (!isHome) {
+      window.location.href = `/#${id}`;
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
@@ -31,11 +41,12 @@ export function Navigation() {
   };
 
   const menuItems = [
-    { label: "Início", id: "hero" },
-    { label: "Sobre Nós", id: "about" },
-    { label: "Cultura", id: "culture" },
-    { label: "Galeria", id: "gallery" },
-    { label: "Contato", id: "contact" },
+    { label: "Início", id: "hero", type: "section" as const },
+    { label: "Sobre Nós", id: "about", type: "section" as const },
+    { label: "Cultura", id: "culture", type: "section" as const },
+    { label: "Loja", id: "/loja", type: "page" as const },
+    { label: "Galeria", id: "gallery", type: "section" as const },
+    { label: "Contato", id: "contact", type: "section" as const },
   ];
 
   return (
@@ -49,37 +60,69 @@ export function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <button
-              onClick={() => scrollToSection("hero")}
-              className="flex items-center gap-3 hover-elevate active-elevate-2 rounded-md p-2 -ml-2"
-              data-testid="button-logo"
-            >
-              <img
-                src={logoColorido}
-                alt="Aldeia Kariri Xocó"
-                className="h-12 w-auto"
-              />
-              <div className="hidden md:block text-left">
-                <p className="font-heading font-bold text-lg leading-tight text-foreground">
-                  Instituto Indígena
-                </p>
-                <p className="font-heading font-bold text-sm text-primary">
-                  Pawi Crody
-                </p>
-              </div>
-            </button>
+{isHome ? (
+              <button
+                onClick={() => scrollToSection("hero")}
+                className="flex items-center gap-3 hover-elevate active-elevate-2 rounded-md p-2 -ml-2"
+                data-testid="button-logo"
+              >
+                <img
+                  src={logoColorido}
+                  alt="Aldeia Kariri Xocó"
+                  className="h-12 w-auto"
+                />
+                <div className="hidden md:block text-left">
+                  <p className="font-heading font-bold text-lg leading-tight text-foreground">
+                    Instituto Indígena
+                  </p>
+                  <p className="font-heading font-bold text-sm text-primary">
+                    Pawi Crody
+                  </p>
+                </div>
+              </button>
+            ) : (
+              <Link href="/" className="flex items-center gap-3 hover-elevate active-elevate-2 rounded-md p-2 -ml-2"
+                data-testid="button-logo"
+              >
+                <img
+                  src={logoColorido}
+                  alt="Aldeia Kariri Xocó"
+                  className="h-12 w-auto"
+                />
+                <div className="hidden md:block text-left">
+                  <p className="font-heading font-bold text-lg leading-tight text-foreground">
+                    Instituto Indígena
+                  </p>
+                  <p className="font-heading font-bold text-sm text-primary">
+                    Pawi Crody
+                  </p>
+                </div>
+              </Link>
+            )}
 
             <div className="hidden lg:flex items-center gap-1">
               {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="px-4 py-2 text-sm font-body font-semibold text-foreground hover-elevate active-elevate-2 rounded-md transition-all relative group"
-                  data-testid={`link-${item.id}`}
-                >
-                  {item.label}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-3/4" />
-                </button>
+                item.type === "page" ? (
+                  <Link 
+                    key={item.id} 
+                    href={item.id}
+                    className="px-4 py-2 text-sm font-body font-semibold text-foreground hover-elevate active-elevate-2 rounded-md transition-all relative group"
+                    data-testid={`link-${item.id}`}
+                  >
+                    {item.label}
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-3/4" />
+                  </Link>
+                ) : (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className="px-4 py-2 text-sm font-body font-semibold text-foreground hover-elevate active-elevate-2 rounded-md transition-all relative group"
+                    data-testid={`link-${item.id}`}
+                  >
+                    {item.label}
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-3/4" />
+                  </button>
+                )
               ))}
             </div>
 
@@ -115,14 +158,26 @@ export function Navigation() {
         <div className="fixed inset-0 z-40 lg:hidden bg-background/98 backdrop-blur-lg">
           <div className="flex flex-col items-center justify-center h-full gap-6 px-6">
             {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="text-3xl font-heading font-bold text-foreground hover:text-primary transition-colors"
-                data-testid={`mobile-link-${item.id}`}
-              >
-                {item.label}
-              </button>
+              item.type === "page" ? (
+                <Link 
+                  key={item.id} 
+                  href={item.id}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-3xl font-heading font-bold text-foreground hover:text-primary transition-colors"
+                  data-testid={`mobile-link-${item.id}`}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="text-3xl font-heading font-bold text-foreground hover:text-primary transition-colors"
+                  data-testid={`mobile-link-${item.id}`}
+                >
+                  {item.label}
+                </button>
+              )
             ))}
             <Button
               onClick={() => scrollToSection("contact")}
