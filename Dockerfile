@@ -31,4 +31,5 @@ USER expressjs
 
 EXPOSE 5000
 
-CMD ["node", "dist/index.js"]
+# Comando para iniciar o servidor de produção
+CMD ["node", "dist/production.js"]
