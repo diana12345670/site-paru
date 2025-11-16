@@ -2,6 +2,15 @@
 
 Este guia mostra como fazer o deploy do site da Aldeia Kariri Xocó no Fly.io.
 
+## ⚠️ Configuração Importante
+
+O arquivo `fly.toml` está configurado para o app **karirixocomultietnica**. Certifique-se de que o nome do app no `fly.toml` corresponde ao nome do seu app no Fly.io.
+
+O Fly.io está configurado para:
+- Construir a imagem a partir do `Dockerfile`
+- Escutar na porta 5000 (configurada como `internal_port`)
+- Verificar a saúde do app via endpoint `/health` a cada 30 segundos
+
 ## Pré-requisitos
 
 ### 1. Instalar o Fly CLI
@@ -38,13 +47,13 @@ app = "seu-nome-personalizado"
 
 Se não alterar, o Fly.io gerará um nome automaticamente.
 
-### 2. Crie o app no Fly.io
+### 2. Crie o app no Fly.io (se ainda não criou)
 
 ```bash
-fly apps create kariri-xoco-web
+fly apps create karirixocomultietnica
 ```
 
-Ou use o nome que você escolheu no passo anterior.
+**Nota:** Se você já criou o app com outro nome, ajuste o `fly.toml` para usar o nome correto do seu app.
 
 ### 3. Configure variáveis de ambiente (se necessário)
 
@@ -55,14 +64,18 @@ fly secrets set NOME_DA_VARIAVEL="valor"
 
 ### 4. Faça o deploy
 
+**IMPORTANTE:** Certifique-se de estar no diretório `site-paru` antes de fazer o deploy:
+
 ```bash
+cd site-paru
 fly deploy
 ```
 
 O Fly.io irá:
-- Construir a imagem Docker
+- Construir a imagem Docker a partir do Dockerfile
 - Fazer upload da imagem
-- Iniciar a aplicação
+- Iniciar a aplicação na porta 5000
+- Verificar o health check em `/health`
 
 ### 5. Abra o site
 
@@ -70,7 +83,7 @@ O Fly.io irá:
 fly open
 ```
 
-Seu site estará disponível em: `https://kariri-xoco-web.fly.dev`
+Seu site estará disponível em: `https://karirixocomultietnica.fly.dev`
 
 ## Comandos úteis
 
@@ -139,6 +152,58 @@ primary_region = "gru"  # São Paulo
 primary_region = "mia"  # Miami
 ```
 
+## Troubleshooting
+
+### Problema: Health check falhando ou timeout
+
+Se você ver mensagens como "O aplicativo não está escutando no endereço esperado" ou "tempo limite excedido":
+
+1. **Verifique se o app está rodando:**
+   ```bash
+   fly ssh console
+   # Dentro do SSH:
+   curl http://localhost:5000/health
+   ```
+
+2. **Verifique os logs:**
+   ```bash
+   fly logs
+   ```
+   Procure por erros durante a inicialização do servidor.
+
+3. **Verifique se o build foi feito corretamente:**
+   - O `fly.toml` deve ter `dockerfile = "Dockerfile"` na seção `[build]`
+   - O Dockerfile deve estar no diretório `site-paru`
+   - Execute o deploy a partir do diretório `site-paru`
+
+4. **Force um rebuild:**
+   ```bash
+   fly deploy --no-cache
+   ```
+
+5. **Verifique as configurações de health check no fly.toml:**
+   - `grace_period = "60s"` - tempo antes de começar a verificar
+   - `timeout = "15s"` - tempo máximo de resposta
+   - `interval = "30s"` - frequência das verificações
+   - `path = "/health"` - endpoint verificado
+
+### Problema: Servidor não inicia no container
+
+Se os logs mostram que o servidor não está iniciando:
+
+1. **Teste o build localmente:**
+   ```bash
+   npm run build
+   NODE_ENV=production PORT=5000 node dist/index.js
+   ```
+
+2. **Verifique se os arquivos foram copiados corretamente:**
+   ```bash
+   fly ssh console
+   ls -la dist/
+   ls -la attached_assets/
+   ```
+
 ## Suporte
 
 - Documentação oficial: https://fly.io/docs/
@@ -152,7 +217,7 @@ Por padrão, o Fly.io pode pausar máquinas inativas. Para manter seu site sempr
 **Configure o UptimeRobot** (recomendado):
 - Veja o guia completo em `UPTIMEROBOT_CONFIG.md`
 - Crie uma conta gratuita em https://uptimerobot.com/
-- Configure um monitor HTTP para: `https://kariri-xoco-web.fly.dev/health`
+- Configure um monitor HTTP para: `https://karirixocomultietnica.fly.dev/health`
 - Intervalo: 5 minutos
 - O UptimeRobot fará pings regulares mantendo o site acordado
 

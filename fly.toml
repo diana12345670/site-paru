@@ -1,10 +1,11 @@
 # fly.toml app configuration file
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 
-app = "kariri-xoco-web"
+app = "karirixocomultietnica"
 primary_region = "gru"
 
 [build]
+  dockerfile = "Dockerfile"
 
 [http_service]
   internal_port = 5000
@@ -15,10 +16,10 @@ primary_region = "gru"
   processes = ["app"]
 
   [[http_service.checks]]
-    grace_period = "30s"
-    interval = "60s"
+    grace_period = "60s"
+    interval = "30s"
     method = "GET"
-    timeout = "10s"
+    timeout = "15s"
     path = "/health"
 
 [env]
