@@ -1,31 +1,23 @@
-# fly.toml app configuration file
+# fly.toml app configuration file generated for karirixocomultietnica on 2025-11-16T15:10:00Z
+#
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "kariri-xoco-web"
-primary_region = "gru"
+app = 'karirixocomultietnica'
+primary_region = 'gru'
 
 [build]
 
 [http_service]
   internal_port = 5000
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 1
-  processes = ["app"]
-
-  [[http_service.checks]]
-    grace_period = "30s"
-    interval = "60s"
-    method = "GET"
-    timeout = "10s"
-    path = "/health"
-
-[env]
-  PORT = "5000"
-  NODE_ENV = "production"
+  min_machines_running = 0
+  processes = ['app']
 
 [[vm]]
-  memory = "512mb"
-  cpu_kind = "shared"
+  memory = '512mb'
+  cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 512
